@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load team_tags %}
+<div class="dropdown" x-data="{isActive: false}" :class="isActive ? 'is-active' : ''">
+  <div class="dropdown-trigger" @click="isActive = !isActive;">
+    <button class="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8M4 18h16"/>
+        </svg>
+      </span>
+      <span class="is-hidden-tablet-only">
+        {% if team %}
+        {{ team.name }}
+        {% else %}
+        {{ request.user.get_display_name }}
+        {% endif %}
+      </span>
+    </button>
+  </div>
+  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      {% if team %}
+      {% if request.user|is_member_of:team %}
+        <a class="dropdown-item" href="{% url 'single_team:manage_team' team.slug %}">
+          <i class="fa fa-gear"></i>
+          {% translate "Team Settings" %}
+        </a>
+      {% endif %}
+      {% if other_teams %}
+        <hr class="dropdown-divider">
+        <span class="dropdown-item">{% translate "Switch Team" %}</span>
+        {% for name, url in other_teams.items %}
+        <ul>
+          <li>
+          <a  class="dropdown-item" href="{{ url }}"><i class="fa fa-arrow-right"></i> {{ name }}</a>
+        </li>
+        </ul>
+        {% endfor %}
+        {% endif %}
+      {% if request.user.is_authenticated %}
+      <hr class="dropdown-divider">
+      <a class="dropdown-item" href="{% url 'teams:create_team' %}">
+        <i class="fa fa-plus"></i>
+        {% translate "Add Team" %}
+      </a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>

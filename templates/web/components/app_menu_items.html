@@ -1,0 +1,6 @@
+{% load i18n %}
+<li>
+  <a href="{% url 'web:home' %}" class="navbar-item {% if active_tab == 'dashboard' %}is-active{% endif %}">
+    <span class="pg-icon"><i class="fa fa-home"></i></span><span class="is-hidden-tablet-only">{% translate "Dashboard" %}</span>
+  </a>
+</li>
